@@ -1,17 +1,24 @@
+<?php
+include 'db.php';
+
+$result = mysqli_query($conn, "SELECT * FROM posts");
+?>
+
 <!DOCTYPE html>
 <html>
+<head>
+    <title>All Posts</title>
+</head>
 <body>
 
-<form method="post">
-    Enter Your Name:
-    <input type="text" name="username">
-    <input type="submit" value="Submit">
-</form>
+<h2>All Blog Posts</h2>
 
 <?php
-if(isset($_POST['username']))
+while($row = mysqli_fetch_assoc($result))
 {
-    echo "<h2>Hello " . $_POST['username'] . "</h2>";
+    echo "<h3>" . $row['title'] . "</h3>";
+    echo "<p>" . $row['content'] . "</p>";
+    echo "<hr>";
 }
 ?>
 
