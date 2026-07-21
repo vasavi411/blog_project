@@ -25,38 +25,53 @@ else
 /* Starting record */
 $start = ($page - 1) * $limit;
 
-/* Search */
-if(isset($_GET['search']) && $_GET['search'] != "")
+/* Search with Prepared Statements */
+if(isset($_GET['search']) && trim($_GET['search']) != "")
 {
-    $search = $_GET['search'];
+    $search = trim($_GET['search']);
+    $like = "%" . $search . "%";
 
-    $sql = "SELECT * FROM posts
-            WHERE title LIKE '%$search%'
-            OR content LIKE '%$search%'
-            LIMIT $start, $limit";
+    $stmt = mysqli_prepare($conn,
+        "SELECT * FROM posts
+         WHERE title LIKE ? OR content LIKE ?
+         LIMIT ?, ?");
 
-    $count_sql = "SELECT COUNT(*) AS total
-                  FROM posts
-                  WHERE title LIKE '%$search%'
-                  OR content LIKE '%$search%'";
+    mysqli_stmt_bind_param($stmt, "ssii", $like, $like, $start, $limit);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $count_stmt = mysqli_prepare($conn,
+        "SELECT COUNT(*) AS total
+         FROM posts
+         WHERE title LIKE ? OR content LIKE ?");
+
+    mysqli_stmt_bind_param($count_stmt, "ss", $like, $like);
+    mysqli_stmt_execute($count_stmt);
+    $count_result = mysqli_stmt_get_result($count_stmt);
 }
 else
 {
-    $sql = "SELECT * FROM posts
-            LIMIT $start, $limit";
+    $stmt = mysqli_prepare($conn,
+        "SELECT * FROM posts LIMIT ?, ?");
 
-    $count_sql = "SELECT COUNT(*) AS total
-                  FROM posts";
+    mysqli_stmt_bind_param($stmt, "ii", $start, $limit);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $count_stmt = mysqli_prepare($conn,
+        "SELECT COUNT(*) AS total FROM posts");
+
+    mysqli_stmt_execute($count_stmt);
+    $count_result = mysqli_stmt_get_result($count_stmt);
 }
 
-$result = mysqli_query($conn, $sql);
-
-$count_result = mysqli_query($conn, $count_sql);
 $count_row = mysqli_fetch_assoc($count_result);
 
 $total_posts = $count_row['total'];
 
 $total_pages = ceil($total_posts / $limit);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -133,8 +148,18 @@ $total_pages = ceil($total_posts / $limit);
 </div>
 
 <div class="nav">
+
+<?php
+if($_SESSION['role'] == "admin")
+{
+?>
     <a href="create.php">Create New Post</a>
+<?php
+}
+?>
+
     <a href="logout.php">Logout</a>
+
 </div>
 
 <h2 style="text-align:center;">All Blog Posts</h2>
@@ -160,12 +185,21 @@ if(mysqli_num_rows($result) > 0)
 
     <p><?php echo $row['content']; ?></p>
 
-    <a href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
+    <?php
+if($_SESSION['role'] == "admin")
+{
+?>
 
-    <a href="delete.php?id=<?php echo $row['id']; ?>"
-    onclick="return confirm('Are you sure you want to delete this post?');">
-    Delete
-    </a>
+<a href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
+
+<a href="delete.php?id=<?php echo $row['id']; ?>"
+onclick="return confirm('Are you sure you want to delete this post?');">
+Delete
+</a>
+
+<?php
+}
+?>
 
 </div>
 

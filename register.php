@@ -5,20 +5,36 @@ $message = "";
 
 if(isset($_POST['register']))
 {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
-    $sql = "INSERT INTO users(username,email,password)
-            VALUES('$username','$email','$password')";
-
-    if(mysqli_query($conn, $sql))
+    // Server-side Validation
+    if(empty($username) || empty($email) || empty($password))
     {
-        $message = "Registration Successful!";
+        $message = "All fields are required!";
+    }
+    elseif(!filter_var($email, FILTER_VALIDATE_EMAIL))
+    {
+        $message = "Invalid Email Format!";
     }
     else
     {
-        $message = "Error: " . mysqli_error($conn);
+        // Prepared Statement
+        $stmt = mysqli_prepare($conn, "INSERT INTO users(username, email, password) VALUES (?, ?, ?)");
+
+        mysqli_stmt_bind_param($stmt, "sss", $username, $email, $password);
+
+        if(mysqli_stmt_execute($stmt))
+        {
+            $message = "Registration Successful!";
+        }
+        else
+        {
+            $message = "Error: " . mysqli_error($conn);
+        }
+
+        mysqli_stmt_close($stmt);
     }
 }
 ?>
@@ -65,6 +81,10 @@ if(isset($_POST['register']))
         a {
             text-decoration: none;
         }
+
+        h3 {
+            color: green;
+        }
     </style>
 </head>
 
@@ -83,20 +103,35 @@ if(isset($_POST['register']))
 
     <form method="POST">
 
-        <input type="text" name="username" placeholder="Username" required>
+        <input type="text"
+               name="username"
+               placeholder="Username"
+               required>
+
         <br>
 
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="email"
+               name="email"
+               placeholder="Email"
+               required>
+
         <br>
 
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               required>
+
         <br>
 
-        <input type="submit" name="register" value="Register">
+        <input type="submit"
+               name="register"
+               value="Register">
 
     </form>
 
-    <p>Already have an account? 
+    <p>
+        Already have an account?
         <a href="login.php">Login here</a>
     </p>
 
