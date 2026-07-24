@@ -79,6 +79,10 @@ $total_pages = ceil($total_posts / $limit);
 <head>
     <title>Blog Project</title>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -142,34 +146,82 @@ $total_pages = ceil($total_posts / $limit);
 
 <body>
 
-<div class="header">
-    <h1>Blog Project</h1>
-    <p>Welcome to the Blog</p>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-<div class="nav">
+<div class="container">
+
+<a class="navbar-brand" href="#">
+<i class="bi bi-journal-bookmark-fill"></i>
+ Blog Management System
+</a>
+
+<div>
 
 <?php
-if($_SESSION['role'] == "admin")
+if($_SESSION['role']=="admin")
 {
 ?>
-    <a href="create.php">Create New Post</a>
+
+<a href="dashboard.php" class="btn btn-warning me-2">
+<i class="bi bi-speedometer2"></i> Dashboard
+</a>
+
+<a href="create.php" class="btn btn-success me-2">
+<i class="bi bi-plus-circle"></i> Create Post
+</a>
+
 <?php
 }
 ?>
 
-    <a href="logout.php">Logout</a>
+<a href="logout.php" class="btn btn-danger">
+<i class="bi bi-box-arrow-right"></i> Logout
+</a>
 
 </div>
 
-<h2 style="text-align:center;">All Blog Posts</h2>
+</div>
 
-<div class="search-box">
-    <form method="GET">
-        <input type="text" name="search" placeholder="Search by title or content"
-        value="<?php if(isset($_GET['search'])) echo $_GET['search']; ?>">
-        <input type="submit" value="Search">
-    </form>
+</nav>
+
+<h2 class="text-center mt-4 mb-4">
+
+<i class="bi bi-journal-text"></i>
+
+All Blog Posts
+
+</h2>
+
+<div class="container mt-4">
+
+<form method="GET" class="row g-2 justify-content-center">
+
+<div class="col-md-6">
+
+<input
+type="text"
+name="search"
+class="form-control"
+placeholder="🔍 Search posts..."
+
+value="<?php if(isset($_GET['search'])) echo $_GET['search']; ?>">
+
+</div>
+
+<div class="col-auto">
+
+<button class="btn btn-primary">
+
+<i class="bi bi-search"></i>
+
+Search
+
+</button>
+
+</div>
+
+</form>
+
 </div>
 
 <?php
@@ -179,29 +231,52 @@ if(mysqli_num_rows($result) > 0)
     {
 ?>
 
-<div class="post">
+<div class="container mt-4">
 
-    <h3><?php echo $row['title']; ?></h3>
+<div class="card shadow">
 
-    <p><?php echo $row['content']; ?></p>
+<div class="card-body">
+
+<h3 class="card-title">
+<i class="bi bi-file-earmark-text text-primary"></i>
+<?php echo $row['title']; ?>
+</h3>
+
+<p class="card-text">
+<?php echo $row['content']; ?>
+</p>
 
     <?php
 if($_SESSION['role'] == "admin")
 {
 ?>
 
-<a href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
+<a href="edit.php?id=<?php echo $row['id']; ?>"
+class="btn btn-primary">
+
+<i class="bi bi-pencil-square"></i>
+ Edit
+
+</a>
 
 <a href="delete.php?id=<?php echo $row['id']; ?>"
+class="btn btn-danger"
 onclick="return confirm('Are you sure you want to delete this post?');">
-Delete
+
+<i class="bi bi-trash"></i>
+ Delete
+
 </a>
 
 <?php
 }
 ?>
 
-</div>
+</div> <!-- card-body -->
+
+</div> <!-- card -->
+
+</div> <!-- container -->
 
 <?php
     }
@@ -212,24 +287,27 @@ else
 }
 ?>
 
-<!-- Pagination Starts -->
+<!-- Bootstrap Pagination -->
 
-<div style="text-align:center; margin:30px;">
+<nav class="mt-4">
+
+<ul class="pagination justify-content-center">
 
 <?php
-
 if($page > 1)
 {
 ?>
 
-<a href="?page=<?php echo $page-1; ?>&search=<?php echo isset($search)?$search:''; ?>"
-style="padding:10px 15px;
-background:#333;
-color:white;
-text-decoration:none;
-border-radius:5px;">
+<li class="page-item">
+
+<a class="page-link"
+href="?page=<?php echo $page-1; ?>&search=<?php echo isset($search)?$search:''; ?>">
+
 Previous
+
 </a>
+
+</li>
 
 <?php
 }
@@ -238,17 +316,16 @@ for($i=1; $i<=$total_pages; $i++)
 {
 ?>
 
-<a href="?page=<?php echo $i; ?>&search=<?php echo isset($search)?$search:''; ?>"
-style="padding:10px 15px;
-margin:5px;
-border:1px solid black;
-text-decoration:none;
-<?php if($page==$i){ ?>
-background:#333;
-color:white;
-<?php } ?>">
+<li class="page-item <?php if($page==$i) echo 'active'; ?>">
+
+<a class="page-link"
+href="?page=<?php echo $i; ?>&search=<?php echo isset($search)?$search:''; ?>">
+
 <?php echo $i; ?>
+
 </a>
+
+</li>
 
 <?php
 }
@@ -257,20 +334,24 @@ if($page < $total_pages)
 {
 ?>
 
-<a href="?page=<?php echo $page+1; ?>&search=<?php echo isset($search)?$search:''; ?>"
-style="padding:10px 15px;
-background:#333;
-color:white;
-text-decoration:none;
-border-radius:5px;">
+<li class="page-item">
+
+<a class="page-link"
+href="?page=<?php echo $page+1; ?>&search=<?php echo isset($search)?$search:''; ?>">
+
 Next
+
 </a>
+
+</li>
 
 <?php
 }
 ?>
 
-</div>
+</ul>
+
+</nav>
 
 </body>
 </html>

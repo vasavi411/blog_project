@@ -43,48 +43,47 @@ if(isset($_POST['register']))
 <html>
 <head>
     <title>User Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f2f2f2;
-        }
+       
+        body{
+    background: linear-gradient(135deg,#4facfe,#00f2fe);
+    font-family: Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    margin:0;
+}
 
-        .register-box {
-            background-color: white;
-            padding: 30px;
-            width: 350px;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        }
+.register-box{
+    background:white;
+    width:420px;
+    padding:35px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
 
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 90%;
-            padding: 10px;
-            margin: 8px 0;
-        }
+.input-group{
+    margin-bottom:20px;
+}
 
-        input[type="submit"] {
-            padding: 10px 25px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
+.btn-register{
+    width:100%;
+}
 
-        a {
-            text-decoration: none;
-        }
+.btn-register:hover{
+    transform:scale(1.03);
+    transition:.3s;
+}
 
-        h3 {
-            color: green;
-        }
+.register-link{
+    text-align:center;
+    margin-top:20px;
+}
     </style>
 </head>
 
@@ -92,50 +91,121 @@ if(isset($_POST['register']))
 
 <div class="register-box">
 
-    <h2>User Registration</h2>
+    <div class="text-center mb-4">
+
+<i class="bi bi-person-plus-fill text-primary" style="font-size:60px;"></i>
+
+<h2 class="mt-3">Create Account</h2>
+
+<p class="text-muted">Register to continue</p>
+
+</div>
 
     <?php
     if($message != "")
     {
-        echo "<h3>$message</h3>";
+        echo "<div class='alert alert-success'>$message</div>";
     }
     ?>
+<form method="POST">
 
-    <form method="POST">
+<div class="input-group">
 
-        <input type="text"
-               name="username"
-               placeholder="Username"
-               required>
+<span class="input-group-text">
+<i class="bi bi-person-fill"></i>
+</span>
 
-        <br>
-
-        <input type="email"
-               name="email"
-               placeholder="Email"
-               required>
-
-        <br>
-
-        <input type="password"
-               name="password"
-               placeholder="Password"
-               required>
-
-        <br>
-
-        <input type="submit"
-               name="register"
-               value="Register">
-
-    </form>
-
-    <p>
-        Already have an account?
-        <a href="login.php">Login here</a>
-    </p>
+<input
+type="text"
+name="username"
+class="form-control"
+placeholder="Enter Username"
+required>
 
 </div>
+
+<div class="input-group">
+
+<span class="input-group-text">
+<i class="bi bi-envelope-fill"></i>
+</span>
+
+<input
+type="email"
+name="email"
+class="form-control"
+placeholder="Enter Email"
+required>
+
+</div>
+
+<div class="input-group">
+
+<span class="input-group-text">
+<i class="bi bi-lock-fill"></i>
+</span>
+
+<input
+type="password"
+name="password"
+id="password"
+class="form-control"
+placeholder="Enter Password"
+required>
+
+<button
+type="button"
+class="btn btn-outline-secondary"
+onclick="togglePassword()">
+
+<i class="bi bi-eye"></i>
+
+</button>
+
+</div>
+
+<button
+type="submit"
+name="register"
+class="btn btn-success btn-register">
+
+<i class="bi bi-person-plus"></i>
+ Register
+
+</button>
+
+</form>
+
+    <div class="register-link">
+
+Already have an account?
+
+<a href="login.php">
+
+Login Here
+
+</a>
+
+</div>
+
+</div>
+<script>
+
+function togglePassword()
+{
+    var pass=document.getElementById("password");
+
+    if(pass.type=="password")
+    {
+        pass.type="text";
+    }
+    else
+    {
+        pass.type="password";
+    }
+}
+
+</script>
 
 </body>
 </html>

@@ -70,65 +70,48 @@ if(isset($_POST['update']))
 <html>
 <head>
     <title>Edit Post</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        body{
-            font-family:Arial,sans-serif;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            min-height:100vh;
-            margin:0;
-            background:#f2f2f2;
-        }
+       body{
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    font-family:Arial,sans-serif;
+}
 
-        .edit-box{
-            background:white;
-            width:400px;
-            padding:30px;
-            text-align:center;
-            border-radius:10px;
-            box-shadow:0 0 10px rgba(0,0,0,0.2);
-        }
-
-        input[type="text"],
-        textarea{
-            width:90%;
-            padding:10px;
-            margin:8px 0;
-        }
-
-        textarea{
-            height:120px;
-        }
-
-        input[type="submit"]{
-            padding:10px 25px;
-            margin-top:10px;
-            cursor:pointer;
-        }
-
-        a{
-            text-decoration:none;
-        }
-
-        h3{
-            color:red;
-        }
+.card{
+    border-radius:15px;
+}
+        
     </style>
 
 </head>
 
 <body>
 
-<div class="edit-box">
+<div class="container mt-5">
 
-<h2>Edit Blog Post</h2>
+<div class="card shadow">
+
+<div class="card-body">
+
+<h2 class="text-center mb-4">
+
+<i class="bi bi-pencil-square text-primary"></i>
+
+Edit Blog Post
+
+</h2>
 
 <?php
-if($message!="")
+if($message != "")
 {
-    echo "<h3>$message</h3>";
+    echo "<div class='alert alert-danger alert-dismissible fade show text-center' role='alert'>
+    $message
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+    </div>";
 }
 ?>
 
@@ -136,33 +119,74 @@ if($message!="")
 
 <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
 
+<div class="mb-3">
+
+<label class="form-label">
+
+Post Title
+
+</label>
+
 <input
 type="text"
 name="title"
+class="form-control"
 value="<?php echo $post['title']; ?>"
 required
 maxlength="100">
 
+</div>
+
 <br>
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Content
+
+</label>
 
 <textarea
 name="content"
+class="form-control"
+rows="6"
 required><?php echo $post['content']; ?></textarea>
+
+</div>
 
 <br>
 
-<input
+<button
 type="submit"
 name="update"
-value="Update Post">
+class="btn btn-primary w-100">
+
+<i class="bi bi-pencil-square"></i>
+
+Update Post
+
+</button>
 
 </form>
 
-<p>
-<a href="index.php">Back to All Blog Posts</a>
-</p>
+<div class="text-center mt-3">
+
+<a href="index.php" class="btn btn-secondary">
+
+<i class="bi bi-arrow-left"></i>
+
+Back to Posts
+
+</a>
 
 </div>
+</div>
+
+</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

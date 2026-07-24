@@ -55,47 +55,57 @@ if(isset($_POST['login']))
 <html>
 <head>
     <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
         body{
-            font-family: Arial, sans-serif;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            min-height:100vh;
-            background:#f2f2f2;
-            margin:0;
-        }
+    background: linear-gradient(135deg,#4facfe,#00f2fe);
+    font-family: Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    margin:0;
+}
 
-        .login-box{
-            background:white;
-            width:350px;
-            padding:30px;
-            border-radius:10px;
-            text-align:center;
-            box-shadow:0 0 10px rgba(0,0,0,0.2);
-        }
+.login-box{
+    background:white;
+    width:420px;
+    padding:35px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
 
-        input[type=email],
-        input[type=password]{
-            width:90%;
-            padding:10px;
-            margin:8px 0;
-        }
+.login-box h2{
+    text-align:center;
+    margin-bottom:25px;
+    font-weight:bold;
+}
 
-        input[type=submit]{
-            padding:10px 25px;
-            cursor:pointer;
-            margin-top:10px;
-        }
+.input-group{
+    margin-bottom:20px;
+}
 
-        h3{
-            color:red;
-        }
+.btn-login{
+    width:100%;
+}
+.btn-login:hover{
+    transform: scale(1.03);
+    transition:0.3s;
+}
 
-        a{
-            text-decoration:none;
-        }
+.error{
+    color:red;
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.register-link{
+    text-align:center;
+    margin-top:20px;
+}
     </style>
 
 </head>
@@ -104,46 +114,111 @@ if(isset($_POST['login']))
 
 <div class="login-box">
 
-<h2>User Login</h2>
+<div class="text-center mb-4">
+
+<i class="bi bi-journal-bookmark-fill text-primary" style="font-size:60px;"></i>
+
+<h2 class="mt-3">Blog Management System</h2>
+
+<p class="text-muted">Login to continue</p>
+
+</div>
 
 <?php
 if($message != "")
 {
-    echo "<h3>$message</h3>";
+    echo "<div class='alert alert-danger'>$message</div>";
 }
 ?>
 
 <form method="POST">
 
+<div class="input-group">
+
+<span class="input-group-text">
+<i class="bi bi-envelope-fill"></i>
+</span>
+
 <input
 type="email"
 name="email"
-placeholder="Email"
+class="form-control"
+placeholder="Enter Email"
 required>
 
-<br>
+</div>
+
+<div class="input-group">
+
+<span class="input-group-text">
+<i class="bi bi-lock-fill"></i>
+</span>
 
 <input
 type="password"
 name="password"
-placeholder="Password"
+id="password"
+class="form-control"
+placeholder="Enter Password"
 required>
 
-<br>
+<button
+class="btn btn-outline-secondary"
+type="button"
+onclick="togglePassword()">
 
-<input
-type="submit"
-name="login"
-value="Login">
+<i class="bi bi-eye"></i>
 
-</form>
-
-<p>
-Don't have an account?
-<a href="register.php">Register here</a>
-</p>
+</button>
 
 </div>
 
+<button
+type="submit"
+name="login"
+class="btn btn-primary btn-login">
+
+<i class="bi bi-box-arrow-in-right"></i>
+ Login
+
+</button>
+
+</form>
+
+<div class="register-link">
+
+Don't have an account?
+
+<a href="register.php">
+
+Register Here
+
+</a>
+
+</div>
+
+
+
+</div>
+
+<script>
+
+function togglePassword()
+{
+    var pass = document.getElementById("password");
+
+    if(pass.type == "password")
+    {
+        pass.type = "text";
+    }
+    else
+    {
+        pass.type = "password";
+    }
+}
+
+</script>
+
 </body>
 </html>
+
