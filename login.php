@@ -4,6 +4,12 @@ include 'db.php';
 
 $message = "";
 
+if(isset($_SESSION['email']))
+{
+    header("Location: index.php");
+    exit();
+}
+
 if(isset($_POST['login']))
 {
     $email = trim($_POST['email']);
@@ -21,30 +27,28 @@ if(isset($_POST['login']))
     else
     {
         // Prepared Statement
-        $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE email = ? AND password = ?");
-
-        mysqli_stmt_bind_param($stmt, "ss", $email, $password);
-
+        $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE email = ?");
+        mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
-
         $result = mysqli_stmt_get_result($stmt);
 
-        if(mysqli_num_rows($result) > 0)
+        if($result && mysqli_num_rows($result) > 0)
         {
-            // Fetch logged in user
             $user = mysqli_fetch_assoc($result);
+            
 
-            // Store session data
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'];
+            if(password_verify($password, $user['password']))
+            {
+                // Store session data
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['role'] = $user['role'];
 
-            header("Location: index.php");
-            exit();
+                header("Location: index.php");
+                exit();
+            }
         }
-        else
-        {
-            $message = "Invalid Email or Password!";
-        }
+
+        $message = "Invalid Email or Password!";
 
         mysqli_stmt_close($stmt);
     }

@@ -20,21 +20,35 @@ if(isset($_POST['register']))
     }
     else
     {
-        // Prepared Statement
-        $stmt = mysqli_prepare($conn, "INSERT INTO users(username, email, password) VALUES (?, ?, ?)");
+        $check = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ?");
+        mysqli_stmt_bind_param($check, "s", $email);
+        mysqli_stmt_execute($check);
+        mysqli_stmt_store_result($check);
 
-        mysqli_stmt_bind_param($stmt, "sss", $username, $email, $password);
-
-        if(mysqli_stmt_execute($stmt))
+        if(mysqli_stmt_num_rows($check) > 0)
         {
-            $message = "Registration Successful!";
+            $message = "Email is already registered.";
+            mysqli_stmt_close($check);
         }
         else
         {
-            $message = "Error: " . mysqli_error($conn);
-        }
+            mysqli_stmt_close($check);
 
-        mysqli_stmt_close($stmt);
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = mysqli_prepare($conn, "INSERT INTO users(username, email, password) VALUES (?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "sss", $username, $email, $hashed_password);
+
+            if(mysqli_stmt_execute($stmt))
+            {
+                $message = "Registration Successful!";
+            }
+            else
+            {
+                $message = "Error: " . mysqli_error($conn);
+            }
+
+            mysqli_stmt_close($stmt);
+        }
     }
 }
 ?>
